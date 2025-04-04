@@ -1,0 +1,4 @@
+img/
+*.code-workspace
+prepare_vm.sh
+README.md
