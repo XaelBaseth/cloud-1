@@ -1,0 +1,17 @@
+---
+- name: Upgrade and install necessary packages
+  hosts: all
+  become: true
+  tasks:
+    - name: Update and upgrade system packages
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+    
+    - name: Install system packages
+      import_role:
+        name: system.packages.roles
+
+    - name: Install docker
+      import_role:
+        name: system.docker.roles

@@ -1,0 +1,14 @@
+---
+- name: Install system packages
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - vim
+      - curl
+      - wget
+      - git
+      - net-tools
+      - apt-transport-https
+      - gnupg
+      - software-properties-common
+    state: latest

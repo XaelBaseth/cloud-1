@@ -1,0 +1,25 @@
+---
+- name: Check if Docker is installed
+  command: docker --version
+  register: docker_version
+  changed_when: false
+  failed_when: docker_version.rc != 0
+
+- name: Display Docker version
+  debug:
+    msg: "Docker version: {{ docker_version.stdout }}"
+  when: docker_version.rc == 0
+
+- name: Check if Docker service is running
+  command: systemctl is-active docker
+  register: docker_service
+  changed_when: false
+  failed_when: docker_service.stdout != "active"
+
+- name: Check if vagrant user can run Docker without sudo
+  become: false
+  become_user: vagrant
+  command: docker ps
+  register: docker_ps
+  changed_when: false
+  failed_when: docker_ps.rc != 0

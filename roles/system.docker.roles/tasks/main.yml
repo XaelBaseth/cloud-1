@@ -1,0 +1,27 @@
+---
+- name: Add Docker's official GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    keyring: /etc/apt/keyrings/docker.gpg
+
+- name: Print architecture variables
+  ansible.builtin.debug:
+    msg: "Architecture: {{ var_system_docker_deb_architecture[ansible_architecture] | default(ansible_architecture) }}, Codename: {{ ansible_lsb.codename }}"
+
+- name: Add Docker repository
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb [arch={{ var_system_docker_deb_architecture[ansible_architecture] | default(ansible_architecture) }}
+      signed-by=/etc/apt/keyrings/docker.gpg]
+      https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable
+    filename: docker
+
+- name: Update apt and install docker packages
+  ansible.builtin.apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    update_cache: true
