@@ -1,6 +1,6 @@
 ---
 - name: Upgrade and install necessary packages
-  hosts: all
+  hosts: vagrant
   become: true
   tasks:
     - name: Update and upgrade system packages
@@ -10,8 +10,8 @@
     
     - name: Install system packages
       import_role:
-        name: system.packages.roles
+        name: packages
 
     - name: Install docker
       import_role:
-        name: system.docker.roles
+        name: docker

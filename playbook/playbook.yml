@@ -1,0 +1,5 @@
+---
+- name: Deploy the wordpress and docker-compose on an instance.
+  hosts: vagrant
+
+- import_playbook: install_packages.yml
