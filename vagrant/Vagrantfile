@@ -1,0 +1,13 @@
+Vagrant.configure("2") do |config|
+	config.vm.define "local-dev" do |local|
+	  local.vm.box = "debian/bookworm64"
+  
+	  local.ssh.insert_key = false
+	  local.vm.network "private_network", ip: "192.168.56.10"
+  
+	  local.vm.provision "shell", inline: <<-SHELL
+		echo "VM is ready. Run Ansible manually."
+	  SHELL
+	end
+  end
+  
