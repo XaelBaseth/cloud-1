@@ -1,0 +1,5 @@
+---
+wordpress_db_password: "password"
+wordpress_db_name: "alice"
+wordpress_db_user: "alice"
+wordpress_domain: "42lh-cloud-1.duckdns.org"
