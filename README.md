@@ -33,9 +33,9 @@ Assurez-vous d’avoir ces outils installés sur votre machine :
 ### 1. Provisionner la machine virtuelle avec Terraform
 
 ```bash
-cd terraform/vagrant
+cd terraform
 terraform init
-terraform apply -auto-approve -var-file=terraform.tfvars
+terraform apply -auto-approve
 ```
 
 Ce processus :
@@ -78,8 +78,10 @@ ssh -i ~/.vagrant.d/insecure_private_keys/vagrant.key.rsa \
 Une fois le déploiement terminé, ouvrez :
 
 ```
-http://42lh-cloud-1.duckdns.org
+http://192.168.56.10:8080
 ```
+
+> Si vous avez changé l’adresse IP dans Vagrantfile ou Terraform, adaptez-la ici.
 
 ---
 

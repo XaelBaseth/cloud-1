@@ -1,5 +1,3 @@
 img/
 *.code-workspace
 prepare_vm.sh
-ansible/roles/deploy_site/defaults
-ansible/roles/deploy_site/files/data

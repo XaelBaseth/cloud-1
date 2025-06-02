@@ -1,6 +1,0 @@
----
-- name: Déployer le site WordPress avec Docker Compose
-  hosts: vagrant
-  become: true
-  roles:
-    - deploy_site
