@@ -1,0 +1,6 @@
+---
+- name: Deploy the WordPress website
+  hosts: vagrant
+  become: true
+  roles:
+    - deploy_site

@@ -3,3 +3,5 @@
   hosts: vagrant
 
 - import_playbook: install_packages.yml
+
+- import_playbook: deploy_website.yml
