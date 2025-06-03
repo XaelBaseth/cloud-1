@@ -6,10 +6,26 @@
     group: "{{ wordpress_user }}"
     mode: '0755'
 
+- name: Copy Dockerfile
+  copy:
+    src: Dockerfile
+    dest: "{{ wordpress_dir }}/Dockerfile"
+    owner: "{{ wordpress_user }}"
+    group: "{{ wordpress_user }}"
+    mode: '0644'
+
+- name: Copy entrypoint script
+  copy:
+    src: docker-entrypoint.sh
+    dest: "{{ wordpress_dir }}/docker-entrypoint.sh"
+    owner: "{{ wordpress_user }}"
+    group: "{{ wordpress_user }}"
+    mode: '0755'
+
 - name: Copy docker-compose.yml to the VM
   ansible.builtin.copy:
-    src: docker-compose.yml
-    dest: "{{ wordpress_dir }}/docker-compose.yml"
+    src: docker-compose.yaml
+    dest: "{{ wordpress_dir }}/docker-compose.yaml"
     owner: "{{ wordpress_user }}"
     group: "{{ wordpress_user }}"
     mode: '0644'

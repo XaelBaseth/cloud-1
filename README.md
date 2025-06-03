@@ -8,8 +8,7 @@ Ce projet automatise le déploiement d'un site WordPress dans un environnement l
 
 | Outil           | Rôle                                                                |
 |-----------------|---------------------------------------------------------------------|
-| Terraform       | Provisionne automatiquement une VM locale via Vagrant.              |
-| Vagrant         | Gère les machines virtuelles locales via VirtualBox.                |
+| Terraform       | Provisionne automatiquement une VM Azure              |
 | Ansible         | Configure la VM, installe Docker, et déploie WordPress.             |
 | Docker          | Exécute les services WordPress et MariaDB dans des conteneurs.      |
 | Docker Compose  | Orchestration multi-conteneurs (WordPress + DB).                    |
@@ -30,6 +29,14 @@ Assurez-vous d’avoir ces outils installés sur votre machine :
 
 ## 🚀 Lancer l’environnement
 
+### 0. Se connecter a azure
+
+```bash
+az login
+```
+
+Connecte la vm a Azure, et permet le deploiement des ressources sur le portail Azure. 
+
 ### 1. Provisionner la machine virtuelle avec Terraform
 
 ```bash
@@ -39,21 +46,13 @@ terraform apply -auto-approve
 ```
 
 Ce processus :
-- Lance une VM avec Vagrant et VirtualBox.
-- Génére une adresse IP pour la VM.
+- Lance une VM sur Azure
 - Prépare la base pour une configuration automatique via Ansible.
-
-### 2. Générer dynamiquement l’inventaire Ansible
-
-```bash
-python3 ansible/generate_inventory.py
-```
-
-Ce script lit la sortie de Terraform et génère automatiquement un fichier `ansible/inventory.ini` à jour.
 
 ### 3. Exécuter le playbook Ansible
 
 ```bash
+cd ansible
 ansible-playbook -i ansible/inventory.ini playbook/playbook.yml
 ```
 
@@ -65,10 +64,7 @@ Ce playbook :
 ## Se connecter en SSH a la VM
 
 ```bash
-ssh -i ~/.vagrant.d/insecure_private_keys/vagrant.key.rsa \
-    vagrant@192.168.56.10 \
-    -o StrictHostKeyChecking=no \
-    -o UserKnownHostsFile=/dev/null
+ssh alice@42lh-cloud-1.duckdns.org
 ```
 
 ---
@@ -78,24 +74,17 @@ ssh -i ~/.vagrant.d/insecure_private_keys/vagrant.key.rsa \
 Une fois le déploiement terminé, ouvrez :
 
 ```
-http://192.168.56.10:8080
+http://42lh-cloud-1.duckdns.org
 ```
-
-> Si vous avez changé l’adresse IP dans Vagrantfile ou Terraform, adaptez-la ici.
 
 ---
 
 ## 🧹 Nettoyage de l’environnement
 
-Un script est fourni pour nettoyer proprement l’environnement :
-
 ```bash
-sudo ./scripts/clean.sh
+cd terraform 
+terraform destroy -target=azurerm_linux_virtual_machine.main
 ```
 
 Ce script :
-- Détruit la VM Vagrant
-- Supprime les fichiers d’état Terraform
-- Nettoie les images, volumes et conteneurs Docker
-- Supprime les clusters k3d si présents
-- Efface l’inventaire généré
+- Supprime les fichiers d’état Terraform de la VM tout en gardant l'ip publique.

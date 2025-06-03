@@ -1,19 +1,19 @@
 ---
-- name: Add Docker's official GPG key
-  ansible.builtin.apt_key:
-    url: https://download.docker.com/linux/debian/gpg
-    keyring: /etc/apt/keyrings/docker.gpg
+- name: Ensure /etc/apt/keyrings exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
 
-- name: Print architecture variables
-  ansible.builtin.debug:
-    msg: "Architecture: {{ var_system_docker_deb_architecture[ansible_architecture] | default(ansible_architecture) }}, Codename: {{ ansible_lsb.codename }}"
+- name: Add Docker GPG key using apt-key as fallback
+  ansible.builtin.shell: |
+    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+  register: apt_key_result
+  changed_when: "'OK' in apt_key_result.stdout"
 
-- name: Add Docker repository
+- name: Add Docker repository using traditional method
   ansible.builtin.apt_repository:
-    repo: >-
-      deb [arch={{ var_system_docker_deb_architecture[ansible_architecture] | default(ansible_architecture) }}
-      signed-by=/etc/apt/keyrings/docker.gpg]
-      https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable
+    repo: "deb [arch={{ var_system_docker_deb_architecture[ansible_architecture] | default(ansible_architecture) }}] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
     filename: docker
 
 - name: Update apt and install docker packages
@@ -28,7 +28,7 @@
 
 - name: Add user to docker group
   ansible.builtin.user:
-    name: "{{ wordpress_user }}"
+    name: "alice"
     groups: docker
     append: yes
   become: true
