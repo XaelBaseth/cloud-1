@@ -1,5 +1,0 @@
-resource_group_name = "wp-rg"
-location            = "westeurope"
-vm_name             = "wp-vm"
-admin_username      = "azureuser"
-admin_ssh_key_path  = "~/.ssh/id_rsa.pub"

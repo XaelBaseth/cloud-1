@@ -1,6 +1,6 @@
 ---
 - name: Upgrade and install necessary packages
-  hosts: vagrant
+  hosts: azure
   become: true
   tasks:
     - name: Update and upgrade system packages

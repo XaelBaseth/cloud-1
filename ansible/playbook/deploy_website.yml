@@ -1,6 +1,6 @@
 ---
 - name: Deploy the WordPress website
-  hosts: vagrant
+  hosts: azure
   become: true
   roles:
     - deploy_site

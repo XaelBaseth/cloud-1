@@ -25,3 +25,10 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     update_cache: true
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ wordpress_user }}"
+    groups: docker
+    append: yes
+  become: true

@@ -1,40 +1,30 @@
----
-- name: S'assurer que le répertoire du site WordPress existe
+- name: Ensure the WordPress site directory exists
   ansible.builtin.file:
-    path: /home/vagrant/wordpress-site
+    path: "{{ wordpress_dir }}"
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: "{{ wordpress_user }}"
+    group: "{{ wordpress_user }}"
     mode: '0755'
 
-- name: Copier le fichier docker-compose.yml sur la VM
+- name: Copy docker-compose.yml to the VM
   ansible.builtin.copy:
     src: docker-compose.yml
-    dest: /home/vagrant/wordpress-site/docker-compose.yml
-    owner: vagrant
-    group: vagrant
+    dest: "{{ wordpress_dir }}/docker-compose.yml"
+    owner: "{{ wordpress_user }}"
+    group: "{{ wordpress_user }}"
     mode: '0644'
 
-- name: Copier le fichier .env sur la VM depuis le template
+- name: Copy .env template to the VM
   ansible.builtin.template:
     src: .env.j2
-    dest: /home/vagrant/wordpress-site/.env
-    owner: vagrant
-    group: vagrant
+    dest: "{{ wordpress_dir }}/.env"
+    owner: "{{ wordpress_user }}"
+    group: "{{ wordpress_user }}"
     mode: '0644'
 
-- name: Lancer docker-compose pour démarrer les services
+- name: Launch docker-compose
   ansible.builtin.shell: |
     docker compose up -d --remove-orphans
   args:
-    chdir: /home/vagrant/wordpress-site
+    chdir: "{{ wordpress_dir }}"
   become: true
-
-- name: Afficher les conteneurs Docker en cours d'exécution
-  ansible.builtin.shell: docker ps
-  register: docker_ps_output
-  changed_when: false
-
-- name: Debug containers
-  ansible.builtin.debug:
-    msg: "{{ docker_ps_output.stdout }}"

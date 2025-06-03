@@ -1,6 +1,8 @@
 ---
-- name: Deploy the wordpress and docker-compose on an instance.
-  hosts: vagrant
+- name: Deploy the WordPress stack on Azure VM
+  hosts: azure
+  become: true
+  gather_facts: true
 
 - import_playbook: install_packages.yml
 

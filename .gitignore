@@ -1,3 +1,4 @@
 img/
 *.code-workspace
 prepare_vm.sh
+terraform/variables.tf
