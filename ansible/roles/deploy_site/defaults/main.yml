@@ -9,3 +9,4 @@ wordpress_admin_name: "bob"
 
 wordpress_dir: "/home/{{ ansible_user }}/wordpress-site"
 wordpress_user: "{{ ansible_user }}"
+
