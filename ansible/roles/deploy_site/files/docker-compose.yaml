@@ -6,7 +6,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./data/certs:/etc/nginx/certs:ro
       - ./data/vhost.d:/etc/nginx/vhost.d
       - ./data/html:/usr/share/nginx/html
@@ -53,10 +53,11 @@ services:
       dockerfile: Dockerfile
     container_name: wordpress
     environment:
-      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
       - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+      - WORDPRESS_ADMIN_NAME=${WORDPRESS_ADMIN_NAME}
       - VIRTUAL_HOST=${WORDPRESS_DOMAIN}
       - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
       - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}

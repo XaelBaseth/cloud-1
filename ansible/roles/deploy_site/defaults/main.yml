@@ -2,9 +2,10 @@
 wordpress_db_password: "password"
 wordpress_db_name: "alice"
 wordpress_db_user: "alice"
-wordpress_domain: "42lh-cloud-1.duckdns.org"
+wordpress_domain: "42lh-cloud1.duckdns.org"
 duckduckdns_token: "ea3cff07-f2be-4c42-8207-2afffa5da31d"
 wordpress_admin_password: "toor321"
+wordpress_admin_name: "bob"
 
 wordpress_dir: "/home/{{ ansible_user }}/wordpress-site"
 wordpress_user: "{{ ansible_user }}"

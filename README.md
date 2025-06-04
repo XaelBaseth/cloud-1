@@ -74,7 +74,7 @@ ssh alice@42lh-cloud-1.duckdns.org
 Une fois le déploiement terminé, ouvrez :
 
 ```
-http://42lh-cloud-1.duckdns.org
+https://42lh-cloud-1.duckdns.org
 ```
 
 ---
