@@ -64,7 +64,7 @@ Ce playbook :
 ## Se connecter en SSH a la VM
 
 ```bash
-ssh alice@42lh-cloud-1.duckdns.org
+ssh alice@cloud1-42lh.duckdns.org
 ```
 
 ---
@@ -74,7 +74,7 @@ ssh alice@42lh-cloud-1.duckdns.org
 Une fois le déploiement terminé, ouvrez :
 
 ```
-https://42lh-cloud-1.duckdns.org
+https://cloud1-42lh.duckdns.org
 ```
 
 ---
@@ -83,7 +83,7 @@ https://42lh-cloud-1.duckdns.org
 
 ```bash
 cd terraform 
-terraform destroy -target=azurerm_linux_virtual_machine.main
+terraform destroy
 ```
 
 Ce script :
