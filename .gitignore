@@ -2,4 +2,4 @@ img/
 *.code-workspace
 prepare_vm.sh
 terraform/variables.tf
-ansible/roles/deploy_site/templates/.env.j2
+ansible/roles/deploy_site/defaults/main.yml
