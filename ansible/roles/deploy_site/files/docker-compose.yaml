@@ -78,8 +78,8 @@ services:
           if (isset($$_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $$_SERVER['HTTP_HOST'] = $$_SERVER['HTTP_X_FORWARDED_HOST'];
           }
-      # - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
-      # - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
     depends_on:
       - db
     healthcheck:
@@ -100,8 +100,8 @@ services:
       - PMA_PASSWORD=${WORDPRESS_DB_PASSWORD}
       - VIRTUAL_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
       - VIRTUAL_PORT=80
-      # - LETSENCRYPT_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
-      # - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
     depends_on:
       - db
     healthcheck:
@@ -117,7 +117,7 @@ services:
     image: linuxserver/duckdns
     container_name: duckdns
     environment:
-      - SUBDOMAINS=cloud1-42lh
+      - SUBDOMAINS=cloud1-test
       - TOKEN=${DUCKDUCKDNS_TOKEN}
       - TZ=Europe/Paris
     networks:
