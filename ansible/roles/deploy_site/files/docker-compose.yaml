@@ -1,4 +1,5 @@
 services:
+
   nginx-proxy:
     image: jwilder/nginx-proxy
     container_name: nginx-proxy
@@ -16,33 +17,38 @@ services:
       - wp-net
     restart: unless-stopped
 
-  letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-letsencrypt
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./data/certs:/etc/nginx/certs
-      - ./data/vhost.d:/etc/nginx/vhost.d
-      - ./data/html:/usr/share/nginx/html
-    environment:
-      - DEFAULT_EMAIL=admin@${WORDPRESS_DOMAIN}
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-    depends_on:
-      - nginx-proxy
-    networks:
-      - wp-net
-    restart: unless-stopped
+  # letsencrypt:
+  #   image: jrcs/letsencrypt-nginx-proxy-companion
+  #   container_name: nginx-letsencrypt
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ./data/certs:/etc/nginx/certs
+  #     - ./data/vhost.d:/etc/nginx/vhost.d
+  #     - ./data/html:/usr/share/nginx/html
+  #   environment:
+  #     - DEFAULT_EMAIL=admin@${WORDPRESS_DOMAIN}
+  #     - NGINX_PROXY_CONTAINER=nginx-proxy
+  #   depends_on:
+  #     - nginx-proxy
+  #   networks:
+  #     - wp-net
+  #   restart: unless-stopped
 
   db:
     image: mariadb:10.5
     container_name: wordpress-db
     environment:
-     - MYSQL_ROOT_PASSWORD=${WORDPRESS_DB_PASSWORD}
-     - MYSQL_DATABASE=${WORDPRESS_DB_NAME}
-     - MYSQL_USER=${WORDPRESS_DB_USER}
-     - MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${WORDPRESS_DB_PASSWORD}
+      - MYSQL_DATABASE=${WORDPRESS_DB_NAME}
+      - MYSQL_USER=${WORDPRESS_DB_USER}
+      - MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
     volumes:
       - ./data/db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - wp-net
     restart: unless-stopped
@@ -55,20 +61,24 @@ services:
     environment:
       - WORDPRESS_DB_HOST=db
       - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+      - WORDPRESS_ADMIN_NAME=${WORDPRESS_ADMIN_NAME}
+      - WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD}
       - WORDPRESS_USER_NAME=${WORDPRESS_USER_NAME}
       - WORDPRESS_USER_EMAIL=${WORDPRESS_USER_EMAIL}
-      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
       - WORDPRESS_USER_PASSWORD=${WORDPRESS_USER_PASSWORD}
-      - WORDPRESS_ADMIN_NAME=${WORDPRESS_ADMIN_NAME}
       - VIRTUAL_HOST=${WORDPRESS_DOMAIN}
       - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
-      - WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD}
-    volumes:
-      - ./data/wordpress:/var/www/html
+      # - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
+      # - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
     depends_on:
       - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - wp-net
     restart: unless-stopped
@@ -82,8 +92,15 @@ services:
       - PMA_PASSWORD=${WORDPRESS_DB_PASSWORD}
       - VIRTUAL_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
       - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
+      # - LETSENCRYPT_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
+      # - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - wp-net
     restart: unless-stopped
@@ -93,11 +110,11 @@ services:
     container_name: duckdns
     environment:
       - SUBDOMAINS=cloud1-42lh
-      - TOKEN=${DUCKDUCKDNS_TOKEN} 
+      - TOKEN=${DUCKDUCKDNS_TOKEN}
       - TZ=Europe/Paris
-    restart: unless-stopped
     networks:
       - wp-net
+    restart: unless-stopped
 
 networks:
   wp-net:

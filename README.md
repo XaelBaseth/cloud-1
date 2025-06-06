@@ -8,7 +8,7 @@ Ce projet automatise le déploiement d'un site WordPress dans un environnement l
 
 | Outil           | Rôle                                                                |
 |-----------------|---------------------------------------------------------------------|
-| Terraform       | Provisionne automatiquement une VM Azure              |
+| Terraform       | Provisionne automatiquement une VM Azure              				|
 | Ansible         | Configure la VM, installe Docker, et déploie WordPress.             |
 | Docker          | Exécute les services WordPress et MariaDB dans des conteneurs.      |
 | Docker Compose  | Orchestration multi-conteneurs (WordPress + DB).                    |
@@ -85,6 +85,3 @@ https://cloud1-42lh.duckdns.org
 cd terraform 
 terraform destroy
 ```
-
-Ce script :
-- Supprime les fichiers d’état Terraform de la VM tout en gardant l'ip publique.
