@@ -17,22 +17,22 @@ services:
       - wp-net
     restart: unless-stopped
 
-  # letsencrypt:
-  #   image: jrcs/letsencrypt-nginx-proxy-companion
-  #   container_name: nginx-letsencrypt
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ./data/certs:/etc/nginx/certs
-  #     - ./data/vhost.d:/etc/nginx/vhost.d
-  #     - ./data/html:/usr/share/nginx/html
-  #   environment:
-  #     - DEFAULT_EMAIL=admin@${WORDPRESS_DOMAIN}
-  #     - NGINX_PROXY_CONTAINER=nginx-proxy
-  #   depends_on:
-  #     - nginx-proxy
-  #   networks:
-  #     - wp-net
-  #   restart: unless-stopped
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-letsencrypt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/certs:/etc/nginx/certs
+      - ./data/vhost.d:/etc/nginx/vhost.d
+      - ./data/html:/usr/share/nginx/html
+    environment:
+      - DEFAULT_EMAIL=admin@${WORDPRESS_DOMAIN}
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    depends_on:
+      - nginx-proxy
+    networks:
+      - wp-net
+    restart: unless-stopped
 
   db:
     image: mariadb:10.5
@@ -70,8 +70,16 @@ services:
       - WORDPRESS_USER_PASSWORD=${WORDPRESS_USER_PASSWORD}
       - VIRTUAL_HOST=${WORDPRESS_DOMAIN}
       - VIRTUAL_PORT=80
-      # - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
-      # - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
+      - WORDPRESS_CONFIG_EXTRA=
+          define('FORCE_SSL_ADMIN', true);
+          if (strpos($$_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+            $$_SERVER['HTTPS'] = 'on';
+          }
+          if (isset($$_SERVER['HTTP_X_FORWARDED_HOST'])) {
+            $$_SERVER['HTTP_HOST'] = $$_SERVER['HTTP_X_FORWARDED_HOST'];
+          }
+      - LETSENCRYPT_HOST=${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
     depends_on:
       - db
     healthcheck:
@@ -92,8 +100,8 @@ services:
       - PMA_PASSWORD=${WORDPRESS_DB_PASSWORD}
       - VIRTUAL_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
       - VIRTUAL_PORT=80
-      # - LETSENCRYPT_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
-      # - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_HOST=phpmyadmin.${WORDPRESS_DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${WORDPRESS_DOMAIN}
     depends_on:
       - db
     healthcheck:
@@ -109,7 +117,7 @@ services:
     image: linuxserver/duckdns
     container_name: duckdns
     environment:
-      - SUBDOMAINS=cloud1-42lh
+      - SUBDOMAINS=cloud1-test
       - TOKEN=${DUCKDUCKDNS_TOKEN}
       - TZ=Europe/Paris
     networks:

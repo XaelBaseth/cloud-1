@@ -11,6 +11,12 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini \
     && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# Add HTTPS configuration for WordPress
+RUN echo "<?php" > /usr/local/etc/php/conf.d/wordpress-https.php && \
+    echo "if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {" >> /usr/local/etc/php/conf.d/wordpress-https.php && \
+    echo "    \$_SERVER['HTTPS'] = 'on';" >> /usr/local/etc/php/conf.d/wordpress-https.php && \
+    echo "}" >> /usr/local/etc/php/conf.d/wordpress-https.php
+
 WORKDIR /var/www/html
 
 RUN wp core download --allow-root || true
