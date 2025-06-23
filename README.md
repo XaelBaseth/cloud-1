@@ -1,6 +1,6 @@
 # 🐳 WordPress Docker Infrastructure (Terraform + Vagrant + Ansible)
 
-Ce projet automatise le déploiement d'un site WordPress dans un environnement local isolé à l'aide des outils DevOps modernes : **Terraform**, **Vagrant**, **Ansible** et **Docker Compose**.
+Ce projet automatise le déploiement d'un site WordPress dans un environnement local isolé à l'aide des outils DevOps modernes : **Terraform**, **Ansible** et **Docker Compose**.
 
 ---
 
@@ -20,7 +20,6 @@ Ce projet automatise le déploiement d'un site WordPress dans un environnement l
 Assurez-vous d’avoir ces outils installés sur votre machine :
 
 - [VirtualBox](https://www.virtualbox.org/)
-- [Vagrant](https://www.vagrantup.com/)
 - [Terraform](https://developer.hashicorp.com/terraform/downloads)
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 - [Python3](https://www.python.org/)
@@ -64,7 +63,7 @@ Ce playbook :
 ## Se connecter en SSH a la VM
 
 ```bash
-ssh alice@cloud1-42lh.duckdns.org
+ssh alice@cloud42lh.duckdns.org
 ```
 
 ---
@@ -74,7 +73,7 @@ ssh alice@cloud1-42lh.duckdns.org
 Une fois le déploiement terminé, ouvrez :
 
 ```
-https://cloud1-42lh.duckdns.org
+https://cloud42lh.duckdns.org/
 ```
 
 ---
