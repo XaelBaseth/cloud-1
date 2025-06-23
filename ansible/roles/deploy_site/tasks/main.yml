@@ -8,7 +8,7 @@
 
 - name: Copy Dockerfile
   copy:
-    src: Dockerfile
+    src: wp/Dockerfile
     dest: "{{ wordpress_dir }}/Dockerfile"
     owner: "{{ wordpress_user }}"
     group: "{{ wordpress_user }}"
@@ -16,7 +16,7 @@
 
 - name: Copy entrypoint script
   copy:
-    src: docker-entrypoint.sh
+    src: wp/docker-entrypoint.sh
     dest: "{{ wordpress_dir }}/docker-entrypoint.sh"
     owner: "{{ wordpress_user }}"
     group: "{{ wordpress_user }}"

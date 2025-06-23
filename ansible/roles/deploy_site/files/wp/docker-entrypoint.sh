@@ -22,9 +22,17 @@ else
         --dbpass="$WORDPRESS_DB_PASSWORD" \
         --dbhost="$WORDPRESS_DB_HOST" \
         --path="$WP_PATH" --allow-root
+	
+	echo "[WP setup] Injecting HTTPS config into wp-config.php"
+	sed -i "/stop editing/i \
+	define(\"WP_HOME\", \"https://${VIRTUAL_HOST}\");\n\
+	define(\"WP_SITEURL\", \"https://${VIRTUAL_HOST}\");\n\
+	define(\"FORCE_SSL_ADMIN\", true);\n\
+	\$_SERVER[\"HTTPS\"] = \"on\";\n\
+	\$_SERVER[\"SERVER_PORT\"] = 443;\n" "$WP_PATH/wp-config.php"
 
     wp core install \
-        --url="http://${VIRTUAL_HOST}" \
+        --url="https://${VIRTUAL_HOST}" \
         --title="Cloud1" \
         --admin_user="$WORDPRESS_ADMIN_NAME" \
         --admin_password="$WORDPRESS_ADMIN_PASSWORD" \
